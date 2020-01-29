@@ -47,10 +47,10 @@ public class MainModel implements MainContract.Model {
                 this.rpn.add(equationBean.getEquation().substring(k + 1, i));
                 k = i;
                 //如果该运算符在算式末尾则结束遍历
-                if (k==equationBean.getEquation().length()-1)break;
+                if (i==equationBean.getEquation().length()-1)break;
                 if (operator.isEmpty())//判定运算符栈是否为空
                     //压入运算符栈
-                    operator.push(String.valueOf(ch));
+                    operator.push(ch);
                 else {
                     //如果扫描到的运算符优先级低于栈顶运算符，则栈顶运算符弹出
                     // 直至栈顶运算符优先级小于或等于当前运算符
@@ -58,12 +58,13 @@ public class MainModel implements MainContract.Model {
                         rpn.add(String.valueOf(operator.pop()));
                         if (operator.isEmpty())break;
                     }
-                    operator.push(String.valueOf(ch));
+                    operator.push(ch);
                 }
             }
         }
-        //将最后一个数输出
-        this.rpn.add(equationBean.getEquation().substring(k + 1));
+        //将最后一个运算符后的数输出
+        if (k!=equationBean.getEquation().length()-1)
+            this.rpn.add(equationBean.getEquation().substring(k + 1));
         //遍历算式后，若运算符栈不为空则运算符依次弹出
         while (!operator.isEmpty()) {
             rpn.add(String.valueOf(operator.pop()));
@@ -78,7 +79,7 @@ public class MainModel implements MainContract.Model {
                 rpn) {
             if (i == null) break;
             str.push(i);
-            if (str.peek().length() == 1&&JudgeUtil.isOperator(str.peek().charAt(0))) {
+            if (JudgeUtil.isOperator(str.peek().charAt(0))) {
                 String op = str.pop();
                 String n1 = str.pop();
                 String n2 = str.pop();
