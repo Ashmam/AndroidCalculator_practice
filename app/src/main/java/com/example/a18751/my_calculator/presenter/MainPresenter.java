@@ -9,12 +9,12 @@ import java.text.DecimalFormat;
 
 
 /**
- * @version: 10.0.2
- * @program: XiaoMiCalculator
- * @Package: com.example.a18751.xiaomicalculator.presenter
+ * @version: 1.8.0_74-b02
+ * @program: My_Calculator
+ * @Package: com.example.a18751.my_calculator.presenter
  * @className: MainPresenter
  * @description: MainPresenter
- * @author: ZJH
+ * @author: Ashmam
  * @create: 2020-01-25 21:50
  **/
 public class MainPresenter<T extends MainContract.View> implements MainContract.Presenter {

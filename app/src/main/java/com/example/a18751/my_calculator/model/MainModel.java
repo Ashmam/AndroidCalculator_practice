@@ -5,22 +5,24 @@ import com.example.a18751.my_calculator.contract.MainContract;
 import com.example.a18751.my_calculator.bean.ResultBean;
 import com.example.a18751.my_calculator.util.JudgeUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 
 /**
- * @version: 10.0.2
+ * @version: 1.8.0_74-b02
  * @program: XiaoMiCalculator
- * @Package: com.example.a18751.xiaomicalculator.model
+ * @Package: com.example.a18751.my_calculator.model
  * @className: MainModel
  * @description: main model
- * @author: ZJH
+ * @author: Ashmam
  * @create: 2020-01-25 19:51
  **/
 public class MainModel implements MainContract.Model {
 
     private EquationBean equationBean;
-    public String[] rpn;
+    private List<String> rpn;
     private Stack operator;
     private ResultBean resultBean;
 
@@ -28,7 +30,7 @@ public class MainModel implements MainContract.Model {
         this.equationBean = equationBean;
         resultBean = new ResultBean();
         operator = new Stack();
-        rpn = new String[9];
+        rpn = new ArrayList<String>();
         count();
     }
 
@@ -38,36 +40,33 @@ public class MainModel implements MainContract.Model {
 
     @Override
     public void RPN() {
-        int j = 0;//rpn中下一个元素的下标
         int k = -1;//遍历时上一个运算符的下标
         for (int i = 0; i < equationBean.getEquation().length(); i++) {//遍历算式
             char ch = equationBean.getEquation().charAt(i);
             if (JudgeUtil.isOperator(ch)) {//判定是否为运算符
-                this.rpn[j] = equationBean.getEquation().substring(k + 1, i);
+                this.rpn.add(equationBean.getEquation().substring(k + 1, i));
                 k = i;
-                j++;
+                //如果该运算符在算式末尾则结束遍历
+                if (k==equationBean.getEquation().length()-1)break;
                 if (operator.isEmpty())//判定运算符栈是否为空
                     //压入运算符栈
-                    operator.push(ch);
+                    operator.push(String.valueOf(ch));
                 else {
                     //如果扫描到的运算符优先级低于栈顶运算符，则栈顶运算符弹出
                     // 直至栈顶运算符优先级小于或等于当前运算符
                     while(JudgeUtil.compareToLevel((char) operator.peek(), ch)) {
-                        rpn[j] = String.valueOf(operator.pop());
-                        j++;
+                        rpn.add(String.valueOf(operator.pop()));
                         if (operator.isEmpty())break;
                     }
-                    operator.push(ch);
+                    operator.push(String.valueOf(ch));
                 }
             }
         }
         //将最后一个数输出
-        this.rpn[j] = equationBean.getEquation().substring(k + 1);
-        j++;
+        this.rpn.add(equationBean.getEquation().substring(k + 1));
         //遍历算式后，若运算符栈不为空则运算符依次弹出
         while (!operator.isEmpty()) {
-            rpn[j] = String.valueOf(operator.pop());
-            j++;
+            rpn.add(String.valueOf(operator.pop()));
         }
     }
 
