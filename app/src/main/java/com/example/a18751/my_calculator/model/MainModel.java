@@ -12,13 +12,14 @@ import java.util.Stack;
 
 /**
  * @version: 1.8.0_74-b02
- * @program: XiaoMiCalculator
+ * @program: My_Calculator
  * @Package: com.example.a18751.my_calculator.model
  * @className: MainModel
  * @description: main model
  * @author: Ashmam
  * @create: 2020-01-25 19:51
  **/
+@SuppressWarnings("unchecked")
 public class MainModel implements MainContract.Model {
 
     private EquationBean equationBean;
@@ -50,6 +51,7 @@ public class MainModel implements MainContract.Model {
                 if (i==equationBean.getEquation().length()-1)break;
                 if (operator.isEmpty())//判定运算符栈是否为空
                     //压入运算符栈
+                    //noinspection unchecked
                     operator.push(ch);
                 else {
                     //如果扫描到的运算符优先级低于栈顶运算符，则栈顶运算符弹出
@@ -58,6 +60,7 @@ public class MainModel implements MainContract.Model {
                         rpn.add(String.valueOf(operator.pop()));
                         if (operator.isEmpty())break;
                     }
+                    //noinspection unchecked
                     operator.push(ch);
                 }
             }

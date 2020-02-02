@@ -2,13 +2,19 @@ package com.example.a18751.my_calculator;
 
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import com.example.a18751.my_calculator.bean.EquationBean;
 import com.example.a18751.my_calculator.contract.MainContract;
 import com.example.a18751.my_calculator.presenter.MainPresenter;
+import com.example.a18751.my_calculator.view.LoginActivity;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
@@ -22,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        presenter = new MainPresenter(this);
         Button B_equl;
         Button B_add;
         Button B_minus;
@@ -42,8 +47,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         Button B_zero;
         Button B_delete;
         Button B_clean;
+        presenter = new MainPresenter();
+        presenter.attachView(this);
         this.textView_input = findViewById(R.id.input);
         this.textView_output = findViewById(R.id.result);
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
+
+        //toolbar
+        setSupportActionBar(toolbar);
         //＝
         B_equl = findViewById(R.id.equalButton);
         //＋
@@ -82,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         B_delete = findViewById(R.id.deleteButton);
         //clean
         B_clean = findViewById(R.id.cleanButton);
-        //获取输入框内字符串
-        final String equation = this.textView_input.getText().toString();
         //等于操作
         B_equl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,12 +220,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             @Override
             public void onClick(View v) {
                 String equation = textView_input.getText().toString();
-                if (equation.length() == 1){
+                if (equation.length() == 1) {
                     textView_input.setText("0");
                     presenter.start();
-                }
-                else
+                } else
                     textView_input.setText(equation.substring(0, equation.length() - 1));
+                String equationc = textView_input.getText().toString();
+                presenter.setLastChar(equationc.charAt(equationc.length() - 1));
             }
         });
         //清零操作
@@ -232,12 +242,44 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
-    public void showLoading(String result) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu0_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sign_in:
+                LoginActivity.actionStart(MainActivity.this);
+                break;
+            case R.id.sign_up:
+                break;
+            case R.id.sign_out:
+                break;
+            case R.id.user_info:
+                break;
+            case R.id.switch_user:
+                break;
+            case R.id.quit:
+                this.finish();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    public void showResult(String result) {
         textView_output.setText(result);
     }
 
     @Override
-    public void showLoading(char varchar, boolean condition) {
+    public void showInput(char varchar, boolean condition) {
         if (!condition)
             textView_input.setText(String.valueOf(varchar));
         else {
@@ -245,7 +287,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         }
     }
 
-    public void showLoading(String equation,int i){
+    @Override
+    public void showPercent(String equation) {
         textView_input.setText(equation);
     }
 

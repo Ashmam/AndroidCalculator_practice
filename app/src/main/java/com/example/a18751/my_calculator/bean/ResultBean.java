@@ -10,7 +10,7 @@ package com.example.a18751.my_calculator.bean;
  * @create: 2020-01-26 19:55
  **/
 public class ResultBean {
-    String result;
+    private String result;
 
     public String getResult() {
         return result;

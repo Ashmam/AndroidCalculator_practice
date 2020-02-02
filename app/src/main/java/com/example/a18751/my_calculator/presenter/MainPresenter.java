@@ -24,12 +24,7 @@ public class MainPresenter<T extends MainContract.View> implements MainContract.
     private boolean condition;
     private char lastChar;
 
-    public MainPresenter(){
-        this.condition=false;
-    }
-
-    public MainPresenter(MainContract.View view) {
-        this.mView = view;
+    public MainPresenter() {
         this.condition = false;
     }
 
@@ -37,11 +32,17 @@ public class MainPresenter<T extends MainContract.View> implements MainContract.
         this.mmodel = new MainModel(equation);
     }
 
+    public void setLastChar(char lastChar) {
+        this.lastChar = lastChar;
+    }
+
+    @Override
     public void output(){
-        mView.showLoading(String.valueOf(new DecimalFormat("#.####")
+        mView.showResult(String.valueOf(new DecimalFormat("#.####")
                 .format(Double.parseDouble(this.mmodel.getResultBean().getResult()))));
     }
 
+    @Override
     public void updateEditText(char varchar) {
 
         if (!this.condition) {
@@ -50,29 +51,35 @@ public class MainPresenter<T extends MainContract.View> implements MainContract.
         }
 
         if (!JudgeUtil.isOperator(varchar)&&varchar!='.'){
-            mView.showLoading(varchar, this.condition);
+            mView.showInput(varchar, this.condition);
         }
         else if (!JudgeUtil.isOperator(this.lastChar)&&this.lastChar!='.'){
-            mView.showLoading(varchar, this.condition);
+            mView.showInput(varchar, this.condition);
         }
 
         this.condition = true;
         this.lastChar=varchar;
     }
 
+    @Override
     public void percentOperator(String equation){
         int counter=0;
+        boolean op=false;//运算符存在标记
+        String str;
         if (!JudgeUtil.isOperator(this.lastChar)&&this.lastChar!='.'){
             for (int i=equation.length()-1;i>=0;i--) {
                 if (JudgeUtil.isOperator(equation.charAt(i))){
-                    counter=i;
+                    op=true;
+                    counter=i+1;
                     break;
                 }
             }
-            String str=equation.substring(counter+1);
+            if (op)
+                str=equation.substring(counter);
+            else
+                str=equation;
             double num=Double.parseDouble(str)/100;
-            //System.out.println(new StringBuffer(equation).replace(counter+1,equation.length(), new DecimalFormat("#.####").format(num)));
-            mView.showLoading(String.valueOf(new StringBuffer(equation).replace(counter+1,equation.length(), new DecimalFormat("#.####").format(num))),1);
+            mView.showPercent(String.valueOf(new StringBuffer(equation).replace(counter,equation.length(), new DecimalFormat("#.####").format(num))));
         }
     }
 
@@ -88,10 +95,7 @@ public class MainPresenter<T extends MainContract.View> implements MainContract.
 
     @Override
     public boolean isViewAttach() {
-        if (this.mView == null)
-            return false;
-        else
-            return true;
+        return this.mView != null;
     }
 
     @Override

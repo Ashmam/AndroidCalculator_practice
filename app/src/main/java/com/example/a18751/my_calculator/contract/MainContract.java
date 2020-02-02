@@ -5,7 +5,17 @@ import com.example.a18751.my_calculator.base.BasePresenter;
 import com.example.a18751.my_calculator.base.BaseView;
 
 public interface MainContract {
-    interface View extends BaseView<Presenter> {}
-    interface Presenter extends BasePresenter<View> {}
-    interface Model extends BaseMainModel {}
+    interface View extends BaseView<Presenter> {
+        void showResult(String str);
+        void showInput(char varchar, boolean condition);
+        void showPercent(String str);
+    }
+    interface Presenter extends BasePresenter<View> {
+        void updateEditText(char varchar);
+        void percentOperator(String equation);
+        void output();
+    }
+    interface Model extends BaseMainModel {
+
+    }
 }
