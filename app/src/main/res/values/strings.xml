@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">zjh的计算器3.0</string>
+    <string name="app_name">计算器4.0</string>
     <!--Strings related to main-->
     <string name="tips">input</string>
     <string name="start">0</string>
@@ -12,7 +12,7 @@
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_sign_up">Sign up</string>
 
-    <!--Strings related to menu1_main-->
+    <!--Strings related to user1_menu-->
     <string name="title_activity_user_info">User_info</string>
     <string name="action_sign_out">Sign out</string>
     <string name="action_switch_user">Switch_user</string>

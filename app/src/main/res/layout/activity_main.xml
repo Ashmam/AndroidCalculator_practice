@@ -19,8 +19,14 @@
             app:titleTextColor="@color/colorTitle"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-    />
+            app:layout_constraintRight_toRightOf="parent">
+        <android.widget.ImageView
+                android:id="@+id/userLogo"
+                android:contentDescription="@string/title_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/user"/>
+    </androidx.appcompat.widget.Toolbar>
 
     <!--输入框-->
     <TextView

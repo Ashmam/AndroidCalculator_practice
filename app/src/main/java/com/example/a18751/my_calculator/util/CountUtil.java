@@ -9,7 +9,12 @@ package com.example.a18751.my_calculator.util;
  * @author: ZJH
  * @create: 2020-01-28 01:28
  **/
-public class JudgeUtil {
+public final class CountUtil {
+    /**
+     * 判断是否是运算符
+     * @param varchar
+     * @return
+     */
     public static boolean isOperator(char varchar) {
         switch (varchar) {
             case '＋':
@@ -25,12 +30,23 @@ public class JudgeUtil {
         }
     }
 
+    /**
+     * 比较运算符等级
+     * @param operator1
+     * @param operator2
+     * @return
+     */
     public static boolean compareToLevel(char operator1, char operator2) {
         if (isLevel(operator1)>isLevel(operator2))
             return true;
         else return false;
     }
 
+    /**
+     * 判断运算符等级
+     * @param operator
+     * @return
+     */
     public static int isLevel(char operator) {
         switch (operator) {
             case '＋':
@@ -45,6 +61,13 @@ public class JudgeUtil {
         return 0;
     }
 
+    /**
+     * 计算num1 Operator num2=？
+     * @param num1
+     * @param num2
+     * @param operator
+     * @return
+     */
     public static double count(String num1,String num2,String operator){
         switch (operator){
             case "＋":

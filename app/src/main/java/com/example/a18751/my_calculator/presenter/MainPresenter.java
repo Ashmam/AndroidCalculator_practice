@@ -3,7 +3,7 @@ package com.example.a18751.my_calculator.presenter;
 import com.example.a18751.my_calculator.bean.EquationBean;
 import com.example.a18751.my_calculator.contract.MainContract;
 import com.example.a18751.my_calculator.model.MainModel;
-import com.example.a18751.my_calculator.util.JudgeUtil;
+import com.example.a18751.my_calculator.util.CountUtil;
 
 import java.text.DecimalFormat;
 
@@ -46,14 +46,14 @@ public class MainPresenter<T extends MainContract.View> implements MainContract.
     public void updateEditText(char varchar) {
 
         if (!this.condition) {
-            if (JudgeUtil.isOperator(varchar)||varchar=='.')
+            if (CountUtil.isOperator(varchar)||varchar=='.')
                 this.condition = true;
         }
 
-        if (!JudgeUtil.isOperator(varchar)&&varchar!='.'){
+        if (!CountUtil.isOperator(varchar)&&varchar!='.'){
             mView.showInput(varchar, this.condition);
         }
-        else if (!JudgeUtil.isOperator(this.lastChar)&&this.lastChar!='.'){
+        else if (!CountUtil.isOperator(this.lastChar)&&this.lastChar!='.'){
             mView.showInput(varchar, this.condition);
         }
 
@@ -66,9 +66,9 @@ public class MainPresenter<T extends MainContract.View> implements MainContract.
         int counter=0;
         boolean op=false;//运算符存在标记
         String str;
-        if (!JudgeUtil.isOperator(this.lastChar)&&this.lastChar!='.'){
+        if (!CountUtil.isOperator(this.lastChar)&&this.lastChar!='.'){
             for (int i=equation.length()-1;i>=0;i--) {
-                if (JudgeUtil.isOperator(equation.charAt(i))){
+                if (CountUtil.isOperator(equation.charAt(i))){
                     op=true;
                     counter=i+1;
                     break;

@@ -11,5 +11,5 @@ package com.example.a18751.my_calculator.base;
  **/
 public interface BaseLoginModel {
     void login(String email,String password);
-
+    void logout();
 }

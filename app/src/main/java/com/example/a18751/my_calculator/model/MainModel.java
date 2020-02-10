@@ -3,7 +3,7 @@ package com.example.a18751.my_calculator.model;
 import com.example.a18751.my_calculator.bean.EquationBean;
 import com.example.a18751.my_calculator.contract.MainContract;
 import com.example.a18751.my_calculator.bean.ResultBean;
-import com.example.a18751.my_calculator.util.JudgeUtil;
+import com.example.a18751.my_calculator.util.CountUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class MainModel implements MainContract.Model {
         int k = -1;//遍历时上一个运算符的下标
         for (int i = 0; i < equationBean.getEquation().length(); i++) {//遍历算式
             char ch = equationBean.getEquation().charAt(i);
-            if (JudgeUtil.isOperator(ch)) {//判定是否为运算符
+            if (CountUtil.isOperator(ch)) {//判定是否为运算符
                 this.rpn.add(equationBean.getEquation().substring(k + 1, i));
                 k = i;
                 //如果该运算符在算式末尾则结束遍历
@@ -56,7 +56,7 @@ public class MainModel implements MainContract.Model {
                 else {
                     //如果扫描到的运算符优先级低于栈顶运算符，则栈顶运算符弹出
                     // 直至栈顶运算符优先级小于或等于当前运算符
-                    while(JudgeUtil.compareToLevel((char) operator.peek(), ch)) {
+                    while(CountUtil.compareToLevel((char) operator.peek(), ch)) {
                         rpn.add(String.valueOf(operator.pop()));
                         if (operator.isEmpty())break;
                     }
@@ -82,11 +82,11 @@ public class MainModel implements MainContract.Model {
                 rpn) {
             if (i == null) break;
             str.push(i);
-            if (JudgeUtil.isOperator(str.peek().charAt(0))) {
+            if (CountUtil.isOperator(str.peek().charAt(0))) {
                 String op = str.pop();
                 String n1 = str.pop();
                 String n2 = str.pop();
-                str.push(String.valueOf(JudgeUtil.count(n2, n1, op)));
+                str.push(String.valueOf(CountUtil.count(n2, n1, op)));
             }
         }
         this.resultBean.setResult(str.pop());

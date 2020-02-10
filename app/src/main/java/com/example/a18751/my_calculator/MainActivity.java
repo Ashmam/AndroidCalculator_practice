@@ -1,20 +1,26 @@
 package com.example.a18751.my_calculator;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import com.example.a18751.my_calculator.bean.EquationBean;
 import com.example.a18751.my_calculator.contract.MainContract;
 import com.example.a18751.my_calculator.presenter.MainPresenter;
 import com.example.a18751.my_calculator.view.LoginActivity;
+
+import java.lang.reflect.Method;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
@@ -28,71 +34,80 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button B_equl;
-        Button B_add;
-        Button B_minus;
-        Button B_multi;
-        Button B_division;
-        Button B_percent;
-        Button B_point;
-        Button B_one;
-        Button B_two;
-        Button B_three;
-        Button B_four;
-        Button B_five;
-        Button B_six;
-        Button B_seven;
-        Button B_eight;
-        Button B_nine;
-        Button B_zero;
-        Button B_delete;
-        Button B_clean;
+
         presenter = new MainPresenter();
         presenter.attachView(this);
         this.textView_input = findViewById(R.id.input);
         this.textView_output = findViewById(R.id.result);
-        Toolbar toolbar = findViewById(R.id.main_toolbar);
-
+        //取出savedInstanceState保存的数据
+        if (savedInstanceState != null){
+            Log.d("MainActivity", "take out data: on execute");
+            textView_input.setText(savedInstanceState.getString("equation"));
+            textView_output.setText(savedInstanceState.getString("result"));
+        }
+        else
+            Log.d("MainActivity", "savedInstanceState: null");
+        //userLogo
+        final ImageView imageView_userLogo = findViewById(R.id.userLogo);
         //toolbar
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         //＝
-        B_equl = findViewById(R.id.equalButton);
+        Button B_equl = findViewById(R.id.equalButton);
         //＋
-        B_add = findViewById(R.id.addButton);
+        Button B_add = findViewById(R.id.addButton);
         //➖
-        B_minus = findViewById(R.id.minusButton);
+        Button B_minus = findViewById(R.id.minusButton);
         //×
-        B_multi = findViewById(R.id.multiplyButton);
+        Button B_multi = findViewById(R.id.multiplyButton);
         //÷
-        B_division = findViewById(R.id.divisionButton);
+        Button B_division = findViewById(R.id.divisionButton);
         //％
-        B_percent = findViewById(R.id.percentButton);
+        Button B_percent = findViewById(R.id.percentButton);
         //.
-        B_point = findViewById(R.id.pointButton);
+        Button B_point = findViewById(R.id.pointButton);
         //1
-        B_one = findViewById(R.id.oneButton);
+        Button B_one = findViewById(R.id.oneButton);
         //2
-        B_two = findViewById(R.id.twoButton);
+        Button B_two = findViewById(R.id.twoButton);
         //3
-        B_three = findViewById(R.id.threeButton);
+        Button B_three = findViewById(R.id.threeButton);
         //4
-        B_four = findViewById(R.id.fourButton);
+        Button B_four = findViewById(R.id.fourButton);
         //5
-        B_five = findViewById(R.id.fiveButton);
+        Button B_five = findViewById(R.id.fiveButton);
         //6
-        B_six = findViewById(R.id.sixButton);
+        Button B_six = findViewById(R.id.sixButton);
         //7
-        B_seven = findViewById(R.id.sevenButton);
+        Button B_seven = findViewById(R.id.sevenButton);
         //8
-        B_eight = findViewById(R.id.eightButton);
+        Button B_eight = findViewById(R.id.eightButton);
         //9
-        B_nine = findViewById(R.id.nineButton);
+        Button B_nine = findViewById(R.id.nineButton);
         //0
-        B_zero = findViewById(R.id.zeroButton);
+        Button B_zero = findViewById(R.id.zeroButton);
         //delete
-        B_delete = findViewById(R.id.deleteButton);
+        Button B_delete = findViewById(R.id.deleteButton);
         //clean
-        B_clean = findViewById(R.id.cleanButton);
+        Button B_clean = findViewById(R.id.cleanButton);
+
+        //userLogo操作
+        imageView_userLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final PopupMenu popupMenu = new PopupMenu(MainActivity.this, imageView_userLogo);
+                popupMenu.getMenuInflater().inflate(R.menu.user0_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        onOptionsItemSelected(item);
+                        Log.d("MainActivity", "onMenuItemClick execute");
+                        return true;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
         //等于操作
         B_equl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,6 +263,23 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if (menu != null) {
+            if (menu.getClass() == MenuBuilder.class) {
+                try {
+                    @SuppressLint("PrivateApi")
+                    Method method = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+                    method.setAccessible(true);
+                    method.invoke(menu, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return super.onMenuOpened(featureId, menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sign_in:
@@ -269,8 +301,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        String equation = this.textView_input.getText().toString();
+        String result = this.textView_output.getText().toString();
+        outState.putString("equation",equation);
+        outState.putString("result",result);
+        Log.d("MainActivity", "onSavedInstanceState"+outState.getString("result")+":"+result);
     }
 
     @Override

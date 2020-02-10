@@ -3,48 +3,41 @@ package com.example.a18751.my_calculator.view;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import androidx.annotation.NonNull;
-
-import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
-
+import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.*;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import com.example.a18751.my_calculator.R;
+import com.example.a18751.my_calculator.contract.LoginContract;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.example.a18751.my_calculator.MainActivity;
-import com.example.a18751.my_calculator.R;
-import com.example.a18751.my_calculator.contract.LoginContract;
-import com.example.a18751.my_calculator.contract.MainContract;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>, LoginContract.View {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, LoginContract.View {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -69,13 +62,16 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>, 
     private View mProgressView;
     private View mLoginFormView;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        setupActionBar();
+        Toolbar toolbar=findViewById(R.id.login_toolbar);
+        setSupportActionBar(toolbar);
+        // Get a support ActionBar corresponding to this toolbar
+        ActionBar actionBar=getSupportActionBar();
+        // Enable the Up button
+        actionBar.setDisplayHomeAsUpEnabled(true);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -102,6 +98,17 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>, 
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    /**
+     * 跳转至登录页面
+     *
+     * @param context
+     */
+    public static void actionStart(Context context) {
+        Intent intent = new Intent();
+        intent.setClass(context, LoginActivity.class);
+        context.startActivity(intent);
     }
 
     private void populateAutoComplete() {
@@ -142,15 +149,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>, 
         }
     }
 
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // Show the Up button in the action bar.
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // TODO Auto-generated method stub
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -294,11 +296,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>, 
         mEmailView.setAdapter(adapter);
     }
 
-    public static void actionStart(Context context) {
-        Intent intent = new Intent(context,LoginActivity.class);
-        context.startActivity(intent);
-    }
-
     @Override
     public void setPresenter(LoginContract.Presenter presenter) {
 
@@ -329,7 +326,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>, 
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
         private final String mPassword;

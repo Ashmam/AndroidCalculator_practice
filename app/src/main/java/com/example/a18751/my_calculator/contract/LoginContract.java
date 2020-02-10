@@ -1,8 +1,6 @@
 package com.example.a18751.my_calculator.contract;
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.os.Build;
+
 import com.example.a18751.my_calculator.base.BaseLoginModel;
 import com.example.a18751.my_calculator.base.BasePresenter;
 import com.example.a18751.my_calculator.base.BaseView;
